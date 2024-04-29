@@ -1,0 +1,48 @@
+<div class="container text-center text-sm-center">
+  <!-- <div *ngIf="!isRecording && !recordedVideo">
+    <img src="assets/video-camera.png" alt="Record" width="60px" />
+  </div> -->
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <video
+      *ngIf="!recordedVideo"
+      autoplay
+      #videoElement
+      [height]="300"
+      [width]="400"
+    ></video>
+  </div>
+  <div>
+    <button
+      class="btn btn-primary"
+      (click)="startRecording()"
+      *ngIf="!isRecording && !recordedVideo"
+    >
+      Start Recording
+    </button>
+  </div>
+  <button
+    class="btn btn-danger mt-2"
+    (click)="stopRecording()"
+    *ngIf="isRecording"
+  >
+    Stop Recording
+  </button>
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <video
+      *ngIf="recordedVideo"
+      [src]="recordedVideo"
+      controls
+      [height]="300"
+      [width]="400"
+    ></video>
+  </div>
+  <div>
+    <button
+      *ngIf="recordedVideo"
+      (click)="clearRecording()"
+      class="btn border-danger text-danger rounded-pill btn-sm mt-2"
+    >
+      Clear Recording
+    </button>
+  </div>
+</div>

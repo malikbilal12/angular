@@ -1,0 +1,49 @@
+<form [formGroup]="form">
+  <div>
+    <label for="vehicleNumber" class="form-label">Enter Vehicle number:</label>
+    <input
+      placeholder="Enter Vehicle Number - MPXXCFXXXX"
+      type="text"
+      class="form-control"
+      id="vehicleNumber"
+      formControlName="vehicleNumber"
+    />
+    <div
+      *ngIf="
+        form.get('vehicleNumber')?.invalid &&
+        (form.get('vehicleNumber')?.dirty || form.get('vehicleNumber')?.touched)
+      "
+      class="text-danger"
+    >
+      <div *ngIf="form.get('vehicleNumber')?.errors as vehicleErrors">
+        <div *ngIf="vehicleErrors['required']">Vehicle number is required.</div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="phone" class="form-label small"
+      >Provide optional contact info for vehicle/home owner</label
+    >
+    <input
+      type="text"
+      placeholder="Your Phone number"
+      class="form-control"
+      id="phone"
+      formControlName="phone"
+    />
+    <div
+      *ngIf="
+        form.get('phone')?.invalid &&
+        (form.get('phone')?.dirty || form.get('phone')?.touched)
+      "
+      class="text-danger"
+    >
+      <div *ngIf="form.get('phone')?.errors as phoneErrors">
+        <div *ngIf="phoneErrors['required']">Phone number is required.</div>
+        <div *ngIf="phoneErrors['pattern']">
+          Please enter a valid phone number.
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

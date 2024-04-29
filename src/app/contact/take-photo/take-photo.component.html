@@ -1,0 +1,35 @@
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <!-- Added align-items-center -->
+  <webcam
+    *ngIf="!capturedImage"
+    [height]="300"
+    [width]="400"
+    [trigger]="triggerObservable"
+    (imageCapture)="handleImageCapture($event)"
+  ></webcam>
+  <img
+    *ngIf="capturedImage"
+    [src]="capturedImage"
+    [height]="200"
+    [width]="200"
+    alt="Captured Image"
+  />
+  <div
+    class="col-6 d-flex flex-column justify-content-center align-items-center"
+  >
+    <button
+      (click)="captureImage()"
+      class="btn btn-primary mt-3"
+      *ngIf="!capturedImage"
+    >
+      Capture Photo
+    </button>
+    <button
+      (click)="retakePhoto()"
+      class="btn btn-primary mt-3"
+      *ngIf="capturedImage"
+    >
+      Retake Photo
+    </button>
+  </div>
+</div>

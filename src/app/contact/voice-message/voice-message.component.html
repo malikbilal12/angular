@@ -1,0 +1,40 @@
+<div class="container text-center">
+  <div [class.recording]="recording" *ngIf="!url">
+    <img src="assets/voice-search.png" alt="Record" width="60px" />
+  </div>
+  <div>
+    <div *ngIf="recording">
+      <div>
+        <span> {{ formattedTime }} </span>
+      </div>
+    </div>
+    <div *ngIf="url" class="mt-2">
+      <audio controls [src]="sanitize(url)"></audio>
+    </div>
+    <button
+      *ngIf="!recording && !url"
+      (click)="startRecording()"
+      class="btn btn-primary btn-sm mt-2 rounded-pill px-3"
+    >
+      <i class="fa-solid fa-microphone pe-1"></i> Start Recording
+    </button>
+    <button
+      *ngIf="recording"
+      (click)="stopRecording()"
+      class="btn border border-danger text-danger btn-sm mt-2 rounded-pill px-3"
+    >
+      <i class="fa-solid fa-microphone-slash pe-1"></i> Stop Recording
+    </button>
+    <button
+      *ngIf="url"
+      (click)="clearRecording()"
+      class="btn border-danger text-danger rounded-pill btn-sm mt-2"
+    >
+      Clear Recording
+    </button>
+  </div>
+
+  <div *ngIf="error">
+    <p class="text-danger">{{ error }}</p>
+  </div>
+</div>

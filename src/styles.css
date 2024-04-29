@@ -1,0 +1,85 @@
+.container-fluid{
+    /* max-width: 480px; */
+    /* text-align: center; */
+    text-shadow: none;
+}
+.footer p{
+    font-size: 10px;
+}
+.footer span{
+    font-size: 10px;
+}
+.dark-blue{
+    background-color: rgb(25 75 147);
+    color: white;
+}
+
+.dark-blue:hover{
+    background-color: #35619c;
+    color: white;
+}
+.green-light{
+    background: #3ee580 !important;
+    color: #000 !important;
+}
+.green-dark{
+    background: #558B2F !important;
+    color: white !important;
+}
+.emg-call {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+
+}
+.emg-call button{
+    padding: 10px;
+    background-color: #ff4d4f;
+    color: white;
+}
+.emg-call button:hover{
+    background-color: #ff7875;
+    color: white;
+}
+@media (max-width: 350px) {
+    .btn i {
+      display: block;
+      margin-bottom: 0.5rem; /* Adjust as needed for spacing */
+    }
+  
+    .btn {
+      text-align: center;
+    }
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.recording img {
+    animation: pulse 2s infinite;
+    animation-duration: 2s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+}
+
+
+.modal-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    z-index: 1050; 
+  }
+  
+
+  
+  
+  
