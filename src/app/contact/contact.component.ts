@@ -70,7 +70,7 @@ export class ContactComponent {
 
   handleRecordedVideo(url: any | null): void {
     this.recordedVideoUrl = url;
-    console.log(this.recordedVideoUrl);
+    console.log('new video:', this.recordedVideoUrl);
 
   }
   onSubmitVideo() {
