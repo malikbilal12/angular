@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { WebcamComponent } from 'ngx-webcam';
 import { Observable, Subject } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
@@ -10,14 +10,14 @@ import { WebcamImage } from 'ngx-webcam';
 })
 export class VideoMessageComponent implements OnInit {
   @ViewChild('videoElement') videoElement!: WebcamComponent;
-  @Output() recordVideo = new EventEmitter<string>();
+  @Output() recordVideo = new EventEmitter<Blob>();
   isRecording = false;
   recordedVideo: any;
   triggerObservable = new Subject<void>();
   mediaRecorder: MediaRecorder | null = null;
   recordedChunks: BlobPart[] = [];
 
-  constructor() { }
+  constructor(private ckdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void { }
 
@@ -27,24 +27,24 @@ export class VideoMessageComponent implements OnInit {
   }
 
   stopRecording(): void {
-    console.log('stop');
-
-    this.isRecording = false;
     this.stopMediaRecorder();
   }
 
   handleImage(webcamImage: WebcamImage): void {
     const recordedVideoUrl = webcamImage.imageAsDataUrl;
     this.recordedVideo = recordedVideoUrl;
-    this.recordVideo.emit(recordedVideoUrl);
+    // this.recordVideo.emit(recordedVideoUrl);
   }
 
   clearRecording() {
     this.recordedVideo = null;
+    this.ckdRef.detectChanges();
   }
 
 
   private startMediaRecorder(): void {
+    console.log('strating');
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then(stream => {
@@ -55,15 +55,14 @@ export class VideoMessageComponent implements OnInit {
             }
           };
 
-          // Set up the onstop event listener before starting the recording
           this.mediaRecorder.onstop = () => {
-
             const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
             const recordedVideoUrl = URL.createObjectURL(blob);
             this.recordedVideo = recordedVideoUrl;
-            this.recordVideo.emit(recordedVideoUrl);
-
+            this.recordVideo.emit(blob);
             this.recordedChunks = [];
+            this.isRecording = false;
+            this.ckdRef.detectChanges();
           };
 
           this.mediaRecorder.start();
@@ -76,15 +75,16 @@ export class VideoMessageComponent implements OnInit {
 
     if (this.mediaRecorder) {
       this.mediaRecorder.stop();
-      this.mediaRecorder.onstop = () => {
-        const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
-        const recordedVideoUrl = URL.createObjectURL(blob);
-        this.recordedVideo = recordedVideoUrl;
-        console.log(recordedVideoUrl);
 
-        this.recordVideo.emit(recordedVideoUrl);
-        this.recordedChunks = [];
-      };
+      // this.mediaRecorder.onstop = () => {
+      //   const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
+      //   const recordedVideoUrl = URL.createObjectURL(blob);
+      //   this.recordedVideo = recordedVideoUrl;
+      //   console.log(recordedVideoUrl);
+
+      //   this.recordVideo.emit(recordedVideoUrl);
+      //   this.recordedChunks = [];
+      // };
     }
   }
 }

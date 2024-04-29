@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
@@ -23,6 +23,7 @@ export class ContactComponent {
 
   constructor(private http: HttpClient,
     public router: Router,
+    private ckdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     config: NgbModalConfig,
     private modalService: NgbModal,
@@ -68,9 +69,10 @@ export class ContactComponent {
   }
   recordedVideoUrl: any | null = null;
 
-  handleRecordedVideo(url: any | null): void {
+  handleRecordedVideo(url: Blob | null): void {
     this.recordedVideoUrl = url;
-    console.log('new video:', this.recordedVideoUrl);
+    this.ckdRef.detectChanges();
+    console.log('parent video:', this.recordedVideoUrl);
 
   }
   onSubmitVideo() {
