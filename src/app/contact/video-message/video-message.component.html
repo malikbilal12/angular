@@ -1,17 +1,21 @@
 <div class="container text-center text-sm-center">
-  <div *ngIf="!recordedVideo && !isRecording" class="mb-5">
+  <!-- <div *ngIf="!isRecording && !recordedVideo">
     <img src="assets/video-camera.png" alt="Record" width="60px" />
-  </div>
+  </div> -->
   <div class="d-flex flex-column justify-content-center align-items-center">
+    <!-- <video
+      *ngIf="!isRecording"
+      autoplay
+      #videoElement
+      [height]="300"
+      [width]="400"
+    ></video> -->
     <webcam
       *ngIf="isRecording"
       autoplay
       [allowCameraSwitch]="true"
-      #videoElement
       [height]="300"
       [width]="400"
-      [trigger]="triggerObservable"
-      (imageCapture)="handleImage($event)"
     ></webcam>
   </div>
   <div>
@@ -23,6 +27,7 @@
       Start Recording
     </button>
   </div>
+
   <button
     class="btn btn-danger mt-2"
     (click)="stopRecording()"

@@ -67,7 +67,7 @@ export class ContactComponent {
     this.voiceRecording = null
     this.modalService.dismissAll();
   }
-  recordedVideoUrl: any = null;
+  recordedVideoUrl: Blob | null = null;
 
 
   handleRecordedVideo(blob: Blob): void {
