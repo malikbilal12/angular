@@ -30,18 +30,20 @@ export class VideoMessageComponent implements OnInit {
       })
       .catch(error => console.error('Error accessing media devices.', error));
   }
-
-
   stopRecording(): void {
     this.videoMessageService.stopRecording().then((blob: any) => {
       const recordedVideoUrl = URL.createObjectURL(blob);
       this.recordedVideo = recordedVideoUrl;
-      this.recordVideo.emit(blob)
+      this.recordVideo.emit(blob);
       console.log('Video recorded:', blob);
       this.isRecording = false;
+    }).catch((error: any) => {
+      console.error('Error stopping recording:', error);
     });
-    this.offCameras()
+
+    this.offCameras();
   }
+
   clearRecording() {
     this.recordedVideo = null;
   }
