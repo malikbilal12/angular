@@ -1,7 +1,10 @@
 <div class="container text-center text-sm-center">
+  <div *ngIf="!recordedVideo && !isRecording" class="mb-5">
+    <img src="assets/video-camera.png" alt="Record" width="60px" />
+  </div>
   <div class="d-flex flex-column justify-content-center align-items-center">
     <webcam
-      *ngIf="!recordedVideo"
+      *ngIf="isRecording"
       autoplay
       [allowCameraSwitch]="true"
       #videoElement

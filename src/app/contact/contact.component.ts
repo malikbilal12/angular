@@ -67,12 +67,12 @@ export class ContactComponent {
     this.voiceRecording = null
     this.modalService.dismissAll();
   }
-  recordedVideoUrl: any | null = null;
+  recordedVideoUrl: any = null;
 
-  handleRecordedVideo(url: Blob | null): void {
-    this.recordedVideoUrl = url;
-    this.ckdRef.detectChanges();
-    console.log('parent video:', this.recordedVideoUrl);
+
+  handleRecordedVideo(blob: Blob): void {
+    this.recordedVideoUrl = blob
+    console.log(this.recordedVideoUrl);
 
   }
   onSubmitVideo() {
@@ -80,7 +80,7 @@ export class ContactComponent {
       this.verifyData.recordedVideoUrl = this.recordedVideoUrl;
       console.log('Form Values:', this.verifyData);
     }
-    this.recordedVideoUrl = null
+    this.recordedVideoUrl = null;
     this.modalService.dismissAll();
   }
 
@@ -95,7 +95,7 @@ export class ContactComponent {
     this.modalService.open(voice);
   }
   openMakeVideo(video: any) {
-    this.recordedVideoUrl = null
+    this.recordedVideoUrl = null;
     this.modalService.open(video);
   }
   ngOnInit(): void {

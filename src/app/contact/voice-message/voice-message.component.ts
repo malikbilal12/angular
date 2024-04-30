@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as recordRTC from 'recordrtc';
 
@@ -7,7 +7,7 @@ import * as recordRTC from 'recordrtc';
   templateUrl: './voice-message.component.html',
   styleUrls: ['./voice-message.component.css']
 })
-export class VoiceMessageComponent {
+export class VoiceMessageComponent implements OnDestroy {
   record: any;
   recording = false;
   url: any;
@@ -15,17 +15,13 @@ export class VoiceMessageComponent {
   timer: any;
   counter: any
   formattedTime: any
+  mediaStream: MediaStream | null = null;
   @Output() audioRecorded: EventEmitter<Blob> = new EventEmitter<Blob>();
   constructor(private sanitizer: DomSanitizer) { }
   sanitize(url: string) {
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }
-  ngOnDestroy() {
-    clearInterval(this.timer);
-    if (this.recording) {
-      this.stopRecording();
-    }
-  }
+
   startRecording() {
     this.recording = true;
     this.counter = 0;
@@ -48,6 +44,7 @@ export class VoiceMessageComponent {
   }
 
   successCallback(stream: MediaStream) {
+    this.mediaStream = stream
     this.record = new recordRTC.StereoAudioRecorder(stream, {
       mimeType: "audio/wav"
     });
@@ -58,6 +55,10 @@ export class VoiceMessageComponent {
     this.recording = false;
     clearInterval(this.timer)
     this.record.stop(this.processRecording.bind(this));
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream = null;
+    }
   }
 
   processRecording(blob: any) {
@@ -72,6 +73,13 @@ export class VoiceMessageComponent {
   }
   clearRecording() {
     this.url = null;
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timer);
+    if (this.recording) {
+      this.stopRecording();
+    }
   }
 
 }
