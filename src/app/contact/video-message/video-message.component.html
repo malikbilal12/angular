@@ -12,6 +12,7 @@
     ></video> -->
     <webcam
       *ngIf="isRecording"
+      [trigger]="triggerObservable"
       autoplay
       [allowCameraSwitch]="true"
       [height]="300"

@@ -2,7 +2,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import { VideoRecordingService } from './video-recording.service';
 import { WebcamComponent } from 'ngx-webcam';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 
 @Component({
@@ -16,6 +16,8 @@ export class VideoMessageComponent implements OnInit {
   recordedVideo: any
   mediaStream: MediaStream | null = null;
   constructor(private videoMessageService: VideoRecordingService) { }
+  private trigger: Subject<void> = new Subject<void>();
+  public triggerObservable: Observable<void> = this.trigger.asObservable();
 
   ngOnInit(): void { }
 
