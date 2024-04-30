@@ -1,7 +1,10 @@
 <div class="container text-center text-sm-center">
   <div class="d-flex flex-column justify-content-center align-items-center">
-    <div *ngIf="!isRecording && !recordedVideo" class="mb-5 cameraVideo">
-      <img src="assets/video-camera.png" alt="Record" width="60px" />
+    <div
+      *ngIf="!isRecording && !recordedVideo"
+      class="mb-5 cameraVideo recording"
+    >
+      <img src="assets/video-camera.png" alt="Record" width="150px" />
     </div>
     <video
       *ngIf="!recordedVideo"
@@ -21,20 +24,20 @@
   </div>
   <div>
     <button
-      class="btn btn-primary"
+      class="btn btn-primary rounded-pill btn-sm mt-2"
       (click)="startRecording()"
       *ngIf="!isRecording && !recordedVideo"
     >
-      Start Recording
+      <i class="fa-solid fa-video pe-2"></i> Start Recording
     </button>
   </div>
 
   <button
-    class="btn btn-danger mt-2"
+    class="btn border-danger rounded-pill btn-sm mt-2 me-3"
     (click)="stopRecording()"
     *ngIf="isRecording"
   >
-    Stop Recording
+    <i class="fa-solid fa-video-slash pe-2"></i> Stop Recording
   </button>
   <button
     *ngIf="isRecording"

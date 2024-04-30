@@ -24,10 +24,13 @@ export class VideoMessageComponent implements OnInit {
   front = false;
 
   toggleCamera() {
+
     this.front = !this.front;
-    this.videoElement.nativeElement.srcObject = null;
+    // this.videoElement.nativeElement.srcObject = null;
+    // this.offCameras()
+    // this.isRecording = false
+    this.stopRecording()
     this.offCameras()
-    this.isRecording = false
   }
 
   getConstraints() {
