@@ -18,18 +18,32 @@ export class VideoMessageComponent implements OnInit {
   constructor(private videoMessageService: VideoRecordingService) { }
   private trigger: Subject<void> = new Subject<void>();
   public triggerObservable: Observable<void> = this.trigger.asObservable();
-
+  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   ngOnInit(): void { }
 
+  front = false;
+
+  toggleCamera() {
+    this.front = !this.front;
+  }
+
+  getConstraints() {
+    return {
+      video: { facingMode: this.front ? "user" : "environment" }
+    };
+  }
+
   startRecording(): void {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    navigator.mediaDevices.getUserMedia(this.getConstraints())
       .then(stream => {
         this.mediaStream = stream
+        this.videoElement.nativeElement.srcObject = stream;
         this.videoMessageService.startRecording(stream);
         this.isRecording = true;
       })
       .catch(error => console.error('Error accessing media devices.', error));
   }
+
   stopRecording(): void {
     this.videoMessageService.stopRecording().then((blob: any) => {
       const recordedVideoUrl = URL.createObjectURL(blob);
@@ -42,6 +56,7 @@ export class VideoMessageComponent implements OnInit {
     });
 
     this.offCameras();
+    this.videoElement.nativeElement.srcObject = null;
   }
 
   clearRecording() {
