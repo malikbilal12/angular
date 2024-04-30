@@ -1,8 +1,8 @@
 <div class="container text-center text-sm-center">
-  <!-- <div *ngIf="!isRecording && !recordedVideo" class="mb-5">
-    <img src="assets/video-camera.png" alt="Record" width="60px" />
-  </div> -->
   <div class="d-flex flex-column justify-content-center align-items-center">
+    <div *ngIf="!isRecording && !recordedVideo" class="mb-5 cameraVideo">
+      <img src="assets/video-camera.png" alt="Record" width="60px" />
+    </div>
     <video
       *ngIf="!recordedVideo"
       autoplay
