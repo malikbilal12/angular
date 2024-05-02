@@ -39,13 +39,11 @@
   >
     <i class="fa-solid fa-video-slash pe-2"></i> Stop Recording
   </button>
-  <button
     *ngIf="isRecording"
     (click)="toggleCamera()"
     class="btn border-danger text-danger rounded-pill btn-sm mt-2"
   >
     CameraSwitch
-  </button>
 
   <div class="d-flex flex-column justify-content-center align-items-center">
     <video

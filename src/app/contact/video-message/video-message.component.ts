@@ -36,11 +36,11 @@ export class VideoMessageComponent implements OnInit {
   ngAfterViewInit() {
     this.videoElement.nativeElement.muted = true;
   }
-
+  // { facingMode: this.front ? "user" : "environment" }
   getConstraints() {
     return {
       audio: true,
-      video: { facingMode: this.front ? "user" : "environment" }
+      video: { facingMode: "environment" }
     };
   }
 
