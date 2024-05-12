@@ -15,23 +15,17 @@ export class VideoMessageComponent implements OnInit {
   isRecording = false;
   recordedVideo: any
   mediaStream: MediaStream | null = null;
-  constructor(private videoMessageService: VideoRecordingService) { }
-  private trigger: Subject<void> = new Subject<void>();
-  public triggerObservable: Observable<void> = this.trigger.asObservable();
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+
+  constructor(private videoMessageService: VideoRecordingService) { }
   ngOnInit(): void { }
 
-  front = false;
-
-  toggleCamera() {
-
-    this.front = !this.front;
-    // this.videoElement.nativeElement.srcObject = null;
-    // this.offCameras()
-    // this.isRecording = false
-    this.stopRecording()
-    this.offCameras()
-  }
+  // front = false;
+  // toggleCamera() {
+  //   this.front = !this.front;
+  //   this.stopRecording()
+  //   this.offCameras()
+  // }
 
   ngAfterViewInit() {
     this.videoElement.nativeElement.muted = true;
