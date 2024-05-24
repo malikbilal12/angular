@@ -16,6 +16,7 @@ export class ContactComponent {
   category: any[] = []
   subCategories: any[] | undefined
   selectedValue: any
+  mobileNumber: any
   public mess: string = ''
   public verifyData!: any
   public capturedImage: string = '';
@@ -119,6 +120,10 @@ export class ContactComponent {
       this.status = res.is_activated;
       this.loading = false
       if (responseData && responseData.length > 0) {
+        console.log(responseData[0].mobile_user_id);
+        this.mobileNumber = responseData[0].mobile_user_id
+        console.log(this.mobileNumber);
+
         this.category = responseData;
         this.subCategories = JSON.parse(responseData[0].subcategories);
       }
