@@ -120,8 +120,7 @@ export class ContactComponent {
       this.status = res.is_activated;
       this.loading = false
       if (responseData && responseData.length > 0) {
-        console.log(responseData[0].mobile_user_id);
-        this.mobileNumber = responseData[0].mobile_user_id
+        this.mobileNumber = responseData[0].mobile
         console.log(this.mobileNumber);
 
         this.category = responseData;
