@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from '../api.service';
+import { ToastService } from '../toast/toast-service';
 
 
 @Component({
@@ -20,9 +22,10 @@ export class ContactComponent {
   public mess: string = ''
   public verifyData!: any
   public capturedImage: string = '';
-  public voiceRecording: Blob | null = null
+  showMessage: any
 
   constructor(private http: HttpClient,
+    public apiService: ApiService,
     public router: Router,
     private ckdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -34,55 +37,180 @@ export class ContactComponent {
     config.keyboard = false;
 
   }
+  @ViewChild('successTpl') successTpl!: TemplateRef<any>;
+  toastService = inject(ToastService);
+  showSuccess(template: TemplateRef<any>) {
+    this.toastService.show({ template, classname: 'bg-success text-light', delay: 5000 });
+  }
+  showDanger(template: TemplateRef<any>) {
+    this.toastService.show({ template, classname: 'bg-danger text-light', delay: 5000 });
+  }
   handleFormDataChange(formData: FormData) {
+
     this.verifyData = formData;
   }
-
-  onSubmitMessage() {
-    if (this.verifyData && this.selectedValue) {
-      this.verifyData.message = this.selectedValue;
-      console.log('Form Values:', this.verifyData);
+  verfySerial: any
+  async onSubmitMessage() {
+    if (this.verifyData && this.verifyData.vehicleNumber === this.verfySerial) {
+      if (this.selectedValue) {
+        const formData = {
+          "tag_udid": "",
+          "notification_type": "",
+          "notification_media": "",
+          "media_type": "",
+          "mobile_user_id": "",
+          "sender_mobile": "",
+          "notification_text": ""
+        };
+        formData.tag_udid = this.id;
+        formData.notification_text = this.selectedValue;
+        formData.sender_mobile = this.mobileNumber;
+        formData.notification_type = 'text';
+        formData.mobile_user_id = this.mobile_id;
+        this.verifyData.message = this.selectedValue;
+        this.apiService.textMessage(formData).subscribe((res: any) => {
+          console.log(res);
+          this.showMessage = 'successfully sumbited'
+          this.showSuccess(this.successTpl);
+        });
+        this.modalService.dismissAll();
+      }
+    } else {
+      this.showMessage = 'Verification Id did not match.'
+      this.showDanger(this.successTpl);
     }
-    this.modalService.dismissAll();
+
   }
+
 
   public onImageCaptured(image: string): void {
     this.capturedImage = image;
   }
   onSubmitPhoto() {
-    if (this.verifyData && this.capturedImage) {
-      this.verifyData.image = this.capturedImage
-      console.log('Image Values:', this.verifyData)
+    if (this.verifyData && this.verifyData.vehicleNumber === this.verfySerial) {
+      if (this.capturedImage) {
+        const formData = {
+          "tag_udid": "",
+          "notification_type": "",
+          "notification_media": "",
+          "media_type": "",
+          "mobile_user_id": "",
+          "sender_mobile": "",
+          "notification_text": ""
+        };
+
+        formData.tag_udid = this.id;
+        formData.media_type = 'jpeg'
+        formData.notification_text = '';
+        formData.sender_mobile = this.mobileNumber;
+        formData.notification_type = 'picture';
+        formData.notification_media = this.capturedImage
+        formData.mobile_user_id = this.mobile_id;
+        console.log(formData);
+
+        this.apiService.textMessage(formData).subscribe((res: any) => {
+          console.log(res);
+          this.showMessage = 'successfully sumbited'
+          this.showSuccess(this.successTpl);
+        });
+        this.capturedImage = ''
+        this.modalService.dismissAll();
+      }
+    } else {
+      this.showMessage = 'Verification Id did not match.'
+      this.showDanger(this.successTpl);;
     }
-    this.modalService.dismissAll();
   }
-  public onAudioRecorded(blob: Blob): void {
-    this.voiceRecording = blob
-    // console.log('Recorded audio blob:', blob);
+
+  public voiceRecording: any
+  async onAudioRecorded(blob: Blob): Promise<void> {
+    this.voiceRecording = await this.convertBlobToBase64(blob);
+    console.log(this.voiceRecording);
   }
+
   onSubmitVoice() {
-    if (this.verifyData && this.voiceRecording) {
-      this.verifyData.voiceRecording = this.voiceRecording;
-      console.log('Form Values:', this.verifyData);
+    if (this.verifyData && this.verifyData.vehicleNumber === this.verfySerial) {
+      console.log(this.verfySerial);
+      if (this.voiceRecording) {
+        const formData = {
+          "tag_udid": "",
+          "notification_type": "",
+          "notification_media": "",
+          "media_type": "",
+          "mobile_user_id": "",
+          "sender_mobile": "",
+          "notification_text": ""
+        };
+
+        formData.tag_udid = this.id;
+        formData.media_type = 'wav'
+        formData.notification_text = '';
+        formData.sender_mobile = this.mobileNumber;
+        formData.notification_type = 'audio';
+        formData.notification_media = this.voiceRecording
+        formData.mobile_user_id = this.mobile_id;
+        console.log(formData);
+
+        this.apiService.textMessage(formData).subscribe((res: any) => {
+          console.log(res);
+          this.showMessage = 'successfully sumbited'
+          this.showSuccess(this.successTpl);
+        });
+        this.modalService.dismissAll();
+      }
+    } else {
+      this.showMessage = 'Verification Id did not match.'
+      this.showDanger(this.successTpl);
     }
-    this.voiceRecording = null
-    this.modalService.dismissAll();
   }
-  recordedVideoUrl: Blob | null = null;
+  recordedVideoUrl: any
+  async handleRecordedVideo(blob: Blob): Promise<void> {
+    this.recordedVideoUrl = await this.convertBlobToBase64(blob);
 
-
-  handleRecordedVideo(blob: Blob): void {
-    this.recordedVideoUrl = blob
-    console.log(this.recordedVideoUrl);
-
+  }
+  convertBlobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   }
   onSubmitVideo() {
-    if (this.verifyData && this.recordedVideoUrl) {
-      this.verifyData.recordedVideoUrl = this.recordedVideoUrl;
-      console.log('Form Values:', this.verifyData);
+    if (this.verifyData && this.verifyData.vehicleNumber === this.verfySerial) {
+      if (this.recordedVideoUrl) {
+        const formData = {
+          "tag_udid": "",
+          "notification_type": "",
+          "notification_media": "",
+          "media_type": "",
+          "mobile_user_id": "",
+          "sender_mobile": "",
+          "notification_text": ""
+        };
+
+        formData.tag_udid = this.id;
+        formData.media_type = 'mp4'
+        formData.notification_text = '';
+        formData.sender_mobile = this.mobileNumber;
+        formData.notification_type = 'video';
+        formData.notification_media = this.recordedVideoUrl
+        formData.mobile_user_id = this.mobile_id;
+        console.log(formData);
+
+        this.apiService.textMessage(formData).subscribe((res: any) => {
+          console.log(res);
+          this.showMessage = 'successfully sumbited'
+          this.showSuccess(this.successTpl);
+        });
+        this.modalService.dismissAll();
+      }
+    } else {
+      this.showMessage = 'Verification Id did not match.'
+      this.showDanger(this.successTpl);
     }
-    this.recordedVideoUrl = null;
-    this.modalService.dismissAll();
   }
 
   openMessage(message: any) {
@@ -104,23 +232,23 @@ export class ContactComponent {
     this.fetchData()
 
   }
-
-
   handleRadioChange(event: any) {
     this.selectedValue = event.target.value;
     console.log('Selected value:', this.selectedValue);
   }
 
-
+  mobile_id: any
   fetchData() {
     this.loading = true;
-    this.http.get(`https://justvoteit.de/demo/sheild_api/api/isValidQRCode?uuid=${this.id}`).subscribe((res: any) => {
+    this.apiService.getData(this.id).subscribe((res: any) => {
       const responseData = res.data;
       this.mess = res.message as string
       this.status = res.is_activated;
       this.loading = false
       if (responseData && responseData.length > 0) {
+        this.mobile_id = responseData[0].mobile_user_id
         this.mobileNumber = responseData[0].mobile
+        this.verfySerial = responseData[0].verification_id
         console.log(this.mobileNumber);
 
         this.category = responseData;

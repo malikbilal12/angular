@@ -14,6 +14,7 @@ import { VerifyComponent } from './contact/verify/verify.component';
 import { VideoMessageComponent } from './contact/video-message/video-message.component';
 import { VideoRecordingService } from './contact/video-message/video-recording.service';
 import { InvalidComponent } from './contact/invalid/invalid.component';
+import { ToastsContainer } from './toast/toasts-container.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { InvalidComponent } from './contact/invalid/invalid.component';
     WebcamModule,
     NgbModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    ToastsContainer
 
   ],
   providers: [VideoRecordingService],

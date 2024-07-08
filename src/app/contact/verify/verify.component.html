@@ -1,8 +1,8 @@
 <form [formGroup]="form">
   <div>
-    <label for="vehicleNumber" class="form-label">Enter Vehicle number:</label>
+    <label for="vehicleNumber" class="form-label">Enter Verification Id:</label>
     <input
-      placeholder="Enter Vehicle Number - MPXXCFXXXX"
+      placeholder="Enter Verification "
       type="text"
       class="form-control"
       id="vehicleNumber"
@@ -16,7 +16,9 @@
       class="text-danger"
     >
       <div *ngIf="form.get('vehicleNumber')?.errors as vehicleErrors">
-        <div *ngIf="vehicleErrors['required']">Vehicle number is required.</div>
+        <div *ngIf="vehicleErrors['required']">
+          Verification Id is required.
+        </div>
       </div>
     </div>
   </div>
@@ -40,9 +42,6 @@
     >
       <div *ngIf="form.get('phone')?.errors as phoneErrors">
         <div *ngIf="phoneErrors['required']">Phone number is required.</div>
-        <div *ngIf="phoneErrors['pattern']">
-          Please enter a valid phone number.
-        </div>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { VideoRecordingService } from './video-recording.service';
 import { WebcamComponent } from 'ngx-webcam';
 import { Observable, Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import { Observable, Subject } from 'rxjs';
   templateUrl: './video-message.component.html',
   styleUrls: ['./video-message.component.css']
 })
-export class VideoMessageComponent implements OnInit {
+export class VideoMessageComponent implements OnInit, OnDestroy {
   @Output() recordVideo = new EventEmitter<Blob>();
   isRecording = false;
   recordedVideo: any

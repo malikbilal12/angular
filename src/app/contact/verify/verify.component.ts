@@ -13,7 +13,7 @@ export class VerifyComponent {
   constructor(private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
       vehicleNumber: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
+      phone: ['', [Validators.pattern(/^\d+$/)]]
     });
 
     this.form.valueChanges.subscribe(data => {

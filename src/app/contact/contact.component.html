@@ -19,15 +19,14 @@
     <div class="container">
       <a class="navbar-brand me-auto">
         <img
-          src="assets/bb.svg"
+          src="assets/logo-main.png"
           alt=""
-          width="60"
-          height="50"
+          height="35"
           style="width: inherit"
         />
       </a>
       <div class="">
-        <button class="px-3 btn dark-blue rounded fs-8 btn-sm" type="submit">
+        <button class="px-2 btn dark-blue rounded fs-8 btn-sm" type="submit">
           <i class="fa-solid fa-circle-info me-1"></i> Live Support
         </button>
       </div>
@@ -82,6 +81,8 @@
       </div>
     </ng-container>
   </div>
+  <ng-template #successTpl> {{ showMessage }} </ng-template>
+  <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
   <div class="d-flex justify-content-around">
     <a
       class="btn dark-blue rounded btn-sm col-5"
@@ -129,7 +130,7 @@
     <p>
       Please make sure that you are sending the right message. You are helping
       us create a safer and nicer community for yourself and those around you.
-      Thank You <span class="badge dark-blue p-1">ScanKro</span>...!!
+      Thank You <span class="badge dark-blue p-1">ScanSafety</span>...!!
     </p>
   </div>
 </div>
