@@ -10,7 +10,7 @@ export class VideoRecordingService {
 
   startRecording(stream: MediaStream): void {
     const options: recordVideo.Options = {
-      mimeType: 'video/webm;codecs=vp8'
+      mimeType: 'video/mp4'
     };
     this.recorder = new recordVideo(stream, options);
     this.recorder.startRecording();

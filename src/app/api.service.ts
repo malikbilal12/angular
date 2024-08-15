@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  private baseUrl = 'https://justvoteit.de/demo/sheild_api/api';
+  // private baseUrl = 'https://justvoteit.de/demo/sheild_api/api';
+  private baseUrl ='https://scansafety.in/app/server_api/api'
 
   constructor(private http: HttpClient) { }
 

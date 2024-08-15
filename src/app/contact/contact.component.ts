@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast/toast-service';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -13,6 +14,7 @@ import { ToastService } from '../toast/toast-service';
 })
 export class ContactComponent {
   loading: boolean = false;
+  loadingRespose: boolean = false;
   status: boolean;
   id: any | null = ''
   category: any[] = []
@@ -163,21 +165,29 @@ export class ContactComponent {
       this.showDanger(this.successTpl);
     }
   }
-  recordedVideoUrl: any
-  async handleRecordedVideo(blob: Blob): Promise<void> {
-    this.recordedVideoUrl = await this.convertBlobToBase64(blob);
+ recordedVideoUrl: string | undefined;
 
-  }
-  convertBlobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        resolve(reader.result as string);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
+async handleRecordedVideo(blob: Blob): Promise<void> {
+  const videoBase64 = await this.convertBlobToBase64(blob);
+  const mainPart = videoBase64.split('base64,');
+  const typePart = mainPart[0].split(';');
+  const newBase64String = typePart[0] + ';base64,' + mainPart[1];
+  this.recordedVideoUrl = newBase64String;
+  console.log('Recorded video URL:', this.recordedVideoUrl);
+}
+
+
+convertBlobToBase64(blob: Blob): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
   onSubmitVideo() {
     if (this.verifyData && this.verifyData.vehicleNumber === this.verfySerial) {
       if (this.recordedVideoUrl) {
@@ -199,13 +209,14 @@ export class ContactComponent {
         formData.notification_media = this.recordedVideoUrl
         formData.mobile_user_id = this.mobile_id;
         console.log(formData);
-
+        this.loadingRespose = true;
         this.apiService.textMessage(formData).subscribe((res: any) => {
           console.log(res);
+          this.loadingRespose = false;
           this.showMessage = 'successfully sumbited'
           this.showSuccess(this.successTpl);
+          this.modalService.dismissAll();
         });
-        this.modalService.dismissAll();
       }
     } else {
       this.showMessage = 'Verification Id did not match.'
@@ -224,13 +235,19 @@ export class ContactComponent {
     this.modalService.open(voice);
   }
   openMakeVideo(video: any) {
-    this.recordedVideoUrl = null;
+    this.recordedVideoUrl = '';
     this.modalService.open(video);
   }
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
-    this.fetchData()
-
+    this.fetchData().then(() => {
+      if (this.status !== true) {
+        setTimeout(() => {
+          window.location.href = 'https://scansafety.in/';
+          // this.router.navigate(["/"]).then(()=>{window.location.href = 'https://scansafety.in/';});
+        }, 3000);
+      }
+    });
   }
   handleRadioChange(event: any) {
     this.selectedValue = event.target.value;
@@ -238,26 +255,27 @@ export class ContactComponent {
   }
 
   mobile_id: any
-  fetchData() {
+  async fetchData(): Promise<void> {
     this.loading = true;
-    this.apiService.getData(this.id).subscribe((res: any) => {
+    try {
+      const res: any = await firstValueFrom(this.apiService.getData(this.id));
       const responseData = res.data;
-      this.mess = res.message as string
-      this.status = res.is_activated;
-      this.loading = false
+      this.mess = res.message;
+      this.status = res.status;
+      this.loading = false;
       if (responseData && responseData.length > 0) {
-        this.mobile_id = responseData[0].mobile_user_id
-        this.mobileNumber = responseData[0].mobile
-        this.verfySerial = responseData[0].verification_id
+        this.mobile_id = responseData[0].mobile_user_id;
+        this.mobileNumber = responseData[0].mobile;
+        this.verfySerial = responseData[0].verification_id;
         console.log(this.mobileNumber);
 
         this.category = responseData;
         this.subCategories = JSON.parse(responseData[0].subcategories);
       }
-    }, (error) => {
+    } catch (error) {
       console.error('Error fetching data:', error);
-    });
-
+      this.loading = false;
+    }
   }
 
 }

@@ -242,6 +242,7 @@
 </ng-template>
 <!-- Modal for Video -->
 <ng-template #video let-c="close" let-d="dismiss">
+
   <div class="modal-container">
     <div class="modal-header">
       <h6 class="modal-title" id="modal-basic-title">Make Video</h6>
@@ -252,7 +253,19 @@
         (click)="d('Cross click')"
       ></button>
     </div>
-    <div class="modal-body">
+    <ng-container *ngIf="loadingRespose">
+      <div class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </ng-container>
+    <div class="modal-body" *ngIf="!loadingRespose">
       <app-video-message
         (recordVideo)="handleRecordedVideo($event)"
       ></app-video-message>
